@@ -1,6 +1,8 @@
 "use client"
 
 import React, { ChangeEvent, useEffect, useRef, useState } from "react"
+import { formatTime } from "@/helpers/formatTime"
+import { TextField } from "./TextField"
 
 export const VideoPlayer = () => {
     const [videoSrc, setVideoSrc] = useState<string>()
@@ -19,6 +21,16 @@ export const VideoPlayer = () => {
         } else return
     }
 
+    const handleVideoPlayPause = () => {
+        if (videoRef.current) {
+            if (videoRef.current.paused) {
+                videoRef.current.play()
+            } else {
+                videoRef.current.pause()
+            }
+        }
+    }
+
     // Hook for getting CURRENT and TOTAL Video Time
     useEffect(() => {
         const videoElement = videoRef.current
@@ -30,19 +42,13 @@ export const VideoPlayer = () => {
         const getVideoTime = () => {
             // Current Time
             const currentTime = videoElement.currentTime
-            const CurrentMinutes = Math.floor(currentTime / 60)
-            const CurrentSeconds = Math.floor(currentTime % 60)
-            const CurrentMilliseconds = Math.floor((currentTime - Math.floor(currentTime)) * 1000)
-            const formattedCurrentTime = `${String(CurrentMinutes).padStart(2, '0')}:${String(CurrentSeconds).padStart(2, '0')},${String(CurrentMilliseconds).padStart(3, '0')}`
+            const formattedCurrentTime = formatTime(currentTime)
             setCurrentVideoTime(formattedCurrentTime)
             animationFrameId = requestAnimationFrame(getVideoTime)
 
             // Total Time
             const totalTime = videoElement.duration
-            const totalMinutes = Math.floor(totalTime / 60)
-            const totalSeconds = Math.floor(totalTime % 60)
-            const totalMilliseconds = Math.floor((totalTime - Math.floor(totalTime)) * 1000)
-            const formattedTotalTime = `${String(totalMinutes).padStart(2, '0')}:${String(totalSeconds).padStart(2, '0')},${String(totalMilliseconds).padStart(3, '0')}`
+            const formattedTotalTime = formatTime(totalTime)
             setTotalVideoTime(formattedTotalTime)
         }
 
@@ -57,13 +63,13 @@ export const VideoPlayer = () => {
 
     return(
         <>
-            <div className="flex justify-start items-center size-6/12 ml-2">
+            <div className="flex justify-start items-center size-6/12 mt-4 ml-2">
                 <div className="p-2 max-w-lg">
                     <div className="flex flex-col gap-4">
                         {!videoSrc &&
                         <>
-                            <iframe width={480} height={320} className="border border-solid border-slate-200 rounded bg-gradient-to-b from-gray-800" />
-                            <input type="file" accept="video/*" onChange={handleVideoInput} />
+                            <iframe className="w-[38vw] h-[48vh] border border-solid border-gray-800 dark:border-slate-200 rounded bg-gradient-to-t from-slate-500 dark:bg-gradient-to-b dark:from-gray-800" />
+                            <input className="text-black dark:text-white" type="file" accept="video/*" onChange={handleVideoInput} />
                         </>
                         }
 
@@ -71,23 +77,23 @@ export const VideoPlayer = () => {
                             <>
                                 <div className="flex justify-center items-center w-[50vw]">
                                     {/* NEED TO SOLVE 9:16 FORMAT VIDEOS */}
-                                    <div className="max-w-[48vw]">
+                                    <div className="max-w-[48vw] border border-solid border-slate-200 rounded">
                                         <video ref={videoRef} controls>
                                             <source src={videoSrc} type="video/mp4" />
                                             Your browser does not support the video tag.
                                         </video>
                                     </div>
                                 </div>
-                                <div className="flex flex-row justify-between w-[48vw] bg-[#0c0c0c] rounded border-[2px] border-sky-200 p-2 m-2">
+                                <div className="flex flex-row justify-between w-[48vw] bg-slate-100 dark:bg-gray-700 rounded border-[2px] border-gray-800 dark:border-sky-200 p-2 m-2">
                                     {/* create volume up and volume down */}
                                     <div className="">
-                                        <h3>Video time = <span className="font-bold text-green-500">{currentVideoTime}</span></h3>
-                                        <h3>Total time = {totalVideoTime}</h3>
+                                        <p className="text-black dark:text-white">Video time = <span className="font-bold text-green-700 dark:text-green-500">{currentVideoTime}</span></p>
+                                        <p className="text-black dark:text-white">Total time = {totalVideoTime}</p>
                                     </div>
                                     {/* implement dinamically playback rate and video jump */}
                                     <div className="">
-                                        <div>Playback Rate: 1.0x</div>
-                                        <div>Video jump: 3</div>
+                                        <p className="text-black dark:text-white">Playback Rate: 1.0x</p>
+                                        <p className="text-black dark:text-white">Video jump: 3</p>
                                     </div>
                                 </div>
                             </>

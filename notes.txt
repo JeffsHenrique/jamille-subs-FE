@@ -1,0 +1,24 @@
+type Props = {
+    handleVideoPlayPause: () => void
+}
+
+export const TextField = ({ handleVideoPlayPause }: Props) =>
+
+    const togglePlayPause = (event: KeyboardEvent) => {
+        if (event.ctrlKey && event.code === 'Space') {
+            event.preventDefault()
+
+            handleVideoPlayPause()
+        }
+    }
+
+
+        document.addEventListener('keydown', togglePlayPause)
+
+            document.removeEventListener('keydown', togglePlayPause)
+
+
+
+>> VideoPlayer
+
+            <TextField handleVideoPlayPause={handleVideoPlayPause} />
