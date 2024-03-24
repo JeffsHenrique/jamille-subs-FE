@@ -32,6 +32,19 @@ export const TextField = () => {
         return newTextWithItalicTag
     }
 
+    const downloadProduction = () => {
+        const blob = new Blob([textAreaValue], { type: "text/plain" })
+        const url = URL.createObjectURL(blob)
+        const newElement = document.createElement("a")
+
+        newElement.href = url
+        newElement.download = "my-production.txt"
+        document.body.appendChild(newElement)
+        newElement.click()
+        URL.revokeObjectURL(url)
+        document.body.removeChild(newElement)
+    }
+
     useEffect(() => {
         const storedContent = loadTextAreaContentFromLocalStorage()
         setTextAreaValue(storedContent)
@@ -110,8 +123,18 @@ export const TextField = () => {
                     <div className="flex flex-row justify-between items-center my-2">
                         <p className="text-black dark:text-white">Character Count: <span className="font-bold text-slate-800 dark:text-sky-400"> {characterCount} </span></p>
                         <div className="flex justify-end gap-2">
-                            <button className="text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200">Font +</button>
-                            <button className="text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200">Font -</button>
+                            <button className="opacity-40 text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200" disabled>Font +</button>
+                            <button className="opacity-40 text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200" disabled>Font -</button>
+
+                            {/* Download button */}
+
+                            <button 
+                                className="flex flex-row text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200"
+                                onClick={() => downloadProduction()}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" className="fill-black dark:fill-white" viewBox="0 -960 960 960" width="24"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+                                .txt
+                            </button>
                         </div>
                     </div>
                     <div className="flex flex-col items-center max-h-full static">
@@ -124,7 +147,7 @@ export const TextField = () => {
                         ></textarea>
                     </div>
                 </div>
-                {/* Download button */}
+
                 {/* Status - Progress saved */}
 
                 {showSaveProgress &&
