@@ -4,10 +4,63 @@ export const TextField = () => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const [textAreaValue, setTextAreaValue] = useState<string>('')
     const [characterCount, setCharacterCount] = useState<number>(0)
-
+    
     const handleTextAreaInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setTextAreaValue(event.target.value)
     }
+    
+    const saveProductionTempInLocalStorage = () => {
+        localStorage.setItem("TextAreaContent", textAreaValue)
+    }
+
+    const loadTextAreaContentFromLocalStorage = () => {
+        const savedContent = localStorage.getItem('TextAreaContent')
+        return savedContent !== null ? savedContent : ''
+    }
+
+    const addItalicTag = (textAreaValue: string, selectionStart: number, selectionEnd: number) => {
+        const selectedText = textAreaValue.substring(selectionStart, selectionEnd)
+
+        const newTextWithItalicTag = textAreaValue.substring(0, selectionStart) + '<i>' + selectedText + '</i>' + textAreaValue.substring(selectionEnd)
+
+        return newTextWithItalicTag
+    }
+
+    useEffect(() => {
+        const storedContent = loadTextAreaContentFromLocalStorage()
+        setTextAreaValue(storedContent)
+    }, [])
+
+    useEffect(() => {
+        const handleActions = (event: KeyboardEvent) => {
+            if (textAreaValue !== '') {
+                if (event.ctrlKey) {
+                    switch (event.code) {
+                        case 'KeyS':
+                            saveProductionTempInLocalStorage()
+                            event.preventDefault()
+                            break
+
+                        case 'KeyE':
+                            const currentPosition = textAreaRef.current?.selectionStart || 0
+                            const endPosition = textAreaRef.current?.selectionEnd || 0
+                            if (currentPosition !== undefined && endPosition !== undefined) {
+                                const newtext = addItalicTag(textAreaValue, currentPosition, endPosition)
+                                setTextAreaValue(newtext)
+                            }
+                            event.preventDefault()
+                            break
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('keydown', handleActions)
+
+        return () => {
+            window.removeEventListener('keydown', handleActions)
+        }
+    }, [textAreaValue])
 
     useEffect(() => {
         // CHARACTER COUNT
@@ -21,7 +74,6 @@ export const TextField = () => {
                 const endPosition = textArea.selectionEnd
                 const selectedText = textArea.value.substring(startPosition, endPosition)
                 setCharacterCount(selectedText.length)
-                console.log(selectedText)
 
             } else {
                 setCharacterCount(0)

@@ -2,7 +2,6 @@
 
 import React, { ChangeEvent, useEffect, useRef, useState } from "react"
 import { formatTime } from "@/helpers/formatTime"
-import { TextField } from "./TextField"
 
 export const VideoPlayer = () => {
     const [videoSrc, setVideoSrc] = useState<string>()
@@ -10,6 +9,9 @@ export const VideoPlayer = () => {
     const [totalVideoTime, setTotalVideoTime] = useState<string>('')
 
     const videoRef = useRef<HTMLVideoElement>(null)
+
+    let [initialJump, setInitialJump] = useState<number>(3)
+    let [playbackRate, setPlaybackRate] = useState<number>(1)
 
     // function to upload a video
     const handleVideoInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,15 +23,66 @@ export const VideoPlayer = () => {
         } else return
     }
 
-    const handleVideoPlayPause = () => {
-        if (videoRef.current) {
-            if (videoRef.current.paused) {
-                videoRef.current.play()
-            } else {
-                videoRef.current.pause()
+    useEffect(() => {
+        const handleActions = (event: KeyboardEvent) => {
+            const videoElement = videoRef.current
+
+            if (videoElement) {
+
+                // CTRL KEY &&
+                if (event.ctrlKey) {
+                    switch (event.key) {
+                    case ' ':
+                        videoElement.paused ? videoElement.play() : videoElement?.pause()
+                        break
+
+                    case ',':
+                        videoElement.currentTime -= initialJump
+                        break
+
+                    case '.':
+                        videoElement.currentTime += initialJump
+                        break
+
+                    case "ArrowUp":
+                        setPlaybackRate(videoElement.playbackRate += 0.1)
+                        break
+
+                    case "ArrowDown":
+                        setPlaybackRate(videoElement.playbackRate -= 0.1)
+                        break
+
+                    case "0":
+                        setPlaybackRate(videoElement.playbackRate = 1.0)
+                        break
+
+                    default:
+                        break
+                    }
+                }
+
+                if (event.altKey) {
+                    switch (event.key) {
+                        case "ArrowUp":
+                            setInitialJump(initialJump += 1)
+                            break
+
+                        case "ArrowDown":
+                            if (initialJump > 1) {
+                                setInitialJump(initialJump -= 1)
+                            }
+                            break
+                    }
+                }
             }
-        }
     }
+
+        window.addEventListener('keydown', handleActions)
+        
+        return () => {
+            window.removeEventListener('keydown', handleActions)
+        }
+    }, [])
 
     // Hook for getting CURRENT and TOTAL Video Time
     useEffect(() => {
@@ -92,8 +145,8 @@ export const VideoPlayer = () => {
                                     </div>
                                     {/* implement dinamically playback rate and video jump */}
                                     <div className="">
-                                        <p className="text-black dark:text-white">Playback Rate: 1.0x</p>
-                                        <p className="text-black dark:text-white">Video jump: 3</p>
+                                        <p className="text-black dark:text-white">Playback Rate: {playbackRate.toFixed(1)}x</p>
+                                        <p className="text-black dark:text-white">Video jump: {initialJump}</p>
                                     </div>
                                 </div>
                             </>
