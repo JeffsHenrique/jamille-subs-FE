@@ -140,7 +140,7 @@ export const TextField = () => {
                     <div className="flex flex-col items-center max-h-full static">
                         <textarea
                             placeholder="Start the transcription here!"
-                            className="pl-1 w-[48vw] h-[48vh] resize-none border-[2px] border-sky-800 dark:border-sky-200 rounded bg-slate-200 dark:bg-gray-800 text-black dark:text-white"
+                            className="pl-1 w-[48vw] min-h-[24vh] h-[48vh] max-h-[64vh] resize-y border-[2px] border-sky-800 dark:border-sky-200 rounded bg-slate-200 dark:bg-gray-800 text-black dark:text-white"
                             ref={textAreaRef}
                             value={textAreaValue}
                             onChange={handleTextAreaInput}
