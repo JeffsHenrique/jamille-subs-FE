@@ -7,10 +7,11 @@
     <h3>A cute Spotted Cow that'll help your subtitles work :)</h3>
     <p>Jamille is still working ...</p>
     <p>Updates will come soon 🐄</p>
-    <img src="https://i.gifer.com/3F7Y.gif" width="250"></img><p><a href="https://gifer.com">via GIFER</a></p>
 </div>
 
-
+<h5>You can access the website application <a href="https://jamille-subs-fe.vercel.app/" target="_blank">here!</a>
+    <img src="https://media.giphy.com/media/RJhasN5Konz6an51Vs/giphy.gif" alt="Cow wearing blonde wig gif" width="60px" align="center">
+</h5>
 
 </br></br></br></br>
 
