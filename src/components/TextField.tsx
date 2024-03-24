@@ -1,9 +1,11 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { SaveProgress } from "./SaveProgress"
 
 export const TextField = () => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const [textAreaValue, setTextAreaValue] = useState<string>('')
     const [characterCount, setCharacterCount] = useState<number>(0)
+    const [showSaveProgress, setShowSaveProgress] = useState<boolean>(false)
     
     const handleTextAreaInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setTextAreaValue(event.target.value)
@@ -11,6 +13,10 @@ export const TextField = () => {
     
     const saveProductionTempInLocalStorage = () => {
         localStorage.setItem("TextAreaContent", textAreaValue)
+        setShowSaveProgress(true)
+        setTimeout(() => {
+            setShowSaveProgress(false)
+        }, 5000)
     }
 
     const loadTextAreaContentFromLocalStorage = () => {
@@ -120,6 +126,12 @@ export const TextField = () => {
                 </div>
                 {/* Download button */}
                 {/* Status - Progress saved */}
+
+                {showSaveProgress &&
+                    <div className="m-2 flex justify-end">
+                        <SaveProgress />
+                    </div>
+                }
             </div>
         </>
     )
