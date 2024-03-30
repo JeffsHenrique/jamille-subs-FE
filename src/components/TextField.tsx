@@ -5,6 +5,7 @@ export const TextField = () => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const [textAreaValue, setTextAreaValue] = useState<string>('')
     const [characterCount, setCharacterCount] = useState<number>(0)
+    const [fontSize, setFontSize] = useState<number>(16)
     const [showSaveProgress, setShowSaveProgress] = useState<boolean>(false)
     
     const handleTextAreaInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -22,6 +23,15 @@ export const TextField = () => {
     const loadTextAreaContentFromLocalStorage = () => {
         const savedContent = localStorage.getItem('TextAreaContent')
         return savedContent !== null ? savedContent : ''
+    }
+
+    const saveFontSizeInLocalStorage = (fontSizeToSave: number) => {
+        localStorage.setItem("FontSize", fontSizeToSave.toString())
+    }
+
+    const loadFontSizeFromLocalStorage = () => {
+        const savedFontSize = localStorage.getItem('FontSize')
+        return savedFontSize !== null ? savedFontSize : ''
     }
 
     const addItalicTag = (textAreaValue: string, selectionStart: number, selectionEnd: number) => {
@@ -43,6 +53,26 @@ export const TextField = () => {
         newElement.click()
         URL.revokeObjectURL(url)
         document.body.removeChild(newElement)
+    }
+
+    const handleBiggerFontSize = () => {
+        if (fontSize < 48) {
+            setFontSize(prevFontSize => {
+                const newFontSize = prevFontSize + 2
+                saveFontSizeInLocalStorage(newFontSize)
+                return newFontSize
+            })
+        }
+    }
+
+    const handleSmallerFontSize = () => {
+        if (fontSize > 8) {
+            setFontSize(prevFontSize => {
+                const newFontSize = prevFontSize - 2
+                saveFontSizeInLocalStorage(newFontSize)
+                return newFontSize
+            })
+        }
     }
 
     useEffect(() => {
@@ -116,6 +146,13 @@ export const TextField = () => {
 
     }, [textAreaValue])
 
+    useEffect(() => {
+        const storagedFontSize = loadFontSizeFromLocalStorage()
+        if (storagedFontSize !== '') {
+            setFontSize(parseInt(storagedFontSize))
+        }
+    }, [])
+
     return(
         <>
             <div className="mx-2">
@@ -123,8 +160,16 @@ export const TextField = () => {
                     <div className="flex flex-row justify-between items-center my-2">
                         <p className="text-black dark:text-white">Character Count: <span className="font-bold text-slate-800 dark:text-sky-400"> {characterCount} </span></p>
                         <div className="flex justify-end gap-2">
-                            <button className="opacity-40 text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200" disabled>Font +</button>
-                            <button className="opacity-40 text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200" disabled>Font -</button>
+                            <button
+                                onClick={handleBiggerFontSize}
+                                className="text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200">
+                                    Font +
+                            </button>
+                            <button
+                                onClick={handleSmallerFontSize}
+                                className="text-black dark:text-white bg-sky-400 dark:bg-sky-700 px-2 rounded-sm border border-solid border-sky-800 dark:border-sky-200">
+                                    Font -
+                            </button>
 
                             {/* Download button */}
 
@@ -140,7 +185,8 @@ export const TextField = () => {
                     <div className="flex flex-col items-center max-h-full static">
                         <textarea
                             placeholder="Start the transcription here!"
-                            className="pl-1 w-[48vw] min-h-[24vh] h-[48vh] max-h-[64vh] resize-y border-[2px] border-sky-800 dark:border-sky-200 rounded bg-slate-200 dark:bg-gray-800 text-black dark:text-white"
+                            style={{fontSize: `${fontSize}px`}}
+                            className={`pl-1 w-[48vw] min-h-[24vh] h-[48vh] max-h-[64vh] resize-y border-[2px] border-sky-800 dark:border-sky-200 rounded bg-slate-200 dark:bg-gray-800 text-black dark:text-white`}
                             ref={textAreaRef}
                             value={textAreaValue}
                             onChange={handleTextAreaInput}
