@@ -59,10 +59,12 @@ export const VideoPlayer = () => {
 
                     case "ArrowUp":
                         setPlaybackRate(videoElement.playbackRate += 0.1)
+                        event.preventDefault()
                         break
 
                     case "ArrowDown":
                         setPlaybackRate(videoElement.playbackRate -= 0.1)
+                        event.preventDefault()
                         break
 
                     case "0":
@@ -185,14 +187,14 @@ export const VideoPlayer = () => {
                             <>
                                 <div className="flex justify-center items-center w-[50vw]">
                                     {/* NEED TO SOLVE 9:16 FORMAT VIDEOS */}
-                                    <div className="max-w-[44vw] border border-solid border-slate-200 rounded">
-                                        <video ref={videoRef} controls >
+                                    <div className="w-[44vw] border border-solid border-slate-200 rounded">
+                                        <video ref={videoRef} controls disablePictureInPicture >
                                             <source src={videoSrc} type="video/mp4" />
                                             Your browser does not support the video tag.
                                         </video>
                                     </div>
                                 </div>
-                                <div className="flex flex-row justify-between w-[48vw] bg-slate-100 dark:bg-gray-700 rounded border-[2px] border-gray-800 dark:border-sky-200 p-2 m-2">
+                                <div className="flex flex-col md:flex-row justify-between w-[48vw] bg-slate-100 dark:bg-gray-700 rounded border-[2px] border-gray-800 dark:border-sky-200 p-2 m-2">
                                     <div className="min-w-[150px]">
                                         <p className="text-black dark:text-white">Video time = <span className="font-bold text-green-700 dark:text-green-500">{currentVideoTime}</span></p>
                                         <p className="text-black dark:text-white">Total time = {totalVideoTime}</p>
