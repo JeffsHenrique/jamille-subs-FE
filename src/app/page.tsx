@@ -5,6 +5,7 @@ import { VideoPlayer } from "@/components/VideoPlayer"
 import { TextField } from "@/components/TextField"
 import { ThemeProvider } from "@/contexts/ThemeContext"
 import { Footer } from "@/components/Footer"
+import { SearchInput } from "@/components/SearchInput"
 
 const Page = () => {
   return (
@@ -16,6 +17,8 @@ const Page = () => {
           <VideoPlayer />
           <TextField />
         </div>
+
+        <SearchInput />
 
       </div>
 
