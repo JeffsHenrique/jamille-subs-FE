@@ -1,17 +1,21 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { SaveProgress } from "./SaveProgress"
 
-export const TextField = () => {
+type TextFieldProps = {
+    fileName: string | null
+}
+
+export const TextField = ({ fileName }: TextFieldProps) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const [textAreaValue, setTextAreaValue] = useState<string>('')
     const [characterCount, setCharacterCount] = useState<number>(0)
     const [fontSize, setFontSize] = useState<number>(16)
     const [showSaveProgress, setShowSaveProgress] = useState<boolean>(false)
-    
+
     const handleTextAreaInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setTextAreaValue(event.target.value)
     }
-    
+
     const saveProductionTempInLocalStorage = () => {
         localStorage.setItem("TextAreaContent", textAreaValue)
         setShowSaveProgress(true)
@@ -48,7 +52,7 @@ export const TextField = () => {
         const newElement = document.createElement("a")
 
         newElement.href = url
-        newElement.download = "my-production.txt"
+        newElement.download = `${fileName === null ? 'my-transcription.txt' : fileName}`
         document.body.appendChild(newElement)
         newElement.click()
         URL.revokeObjectURL(url)

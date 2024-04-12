@@ -3,16 +3,20 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react"
 import { formatTimeWithoutMilliseconds } from "@/helpers/formatTime"
 
-export const VideoPlayer = () => {
+type videoPlayerProps = {
+    onFileSelect: (fileName: string) => void
+}
+
+export const VideoPlayer = ({ onFileSelect }: videoPlayerProps) => {
     const [videoSrc, setVideoSrc] = useState<string>()
     const [currentVideoTime, setCurrentVideoTime] = useState<string>('')
     const [totalVideoTime, setTotalVideoTime] = useState<string>('')
     const [audioCtx, setAudioCtx] = useState<AudioContext | null>(null)
     const [source, setSource] = useState<MediaElementAudioSourceNode | null>(null)
     const [gainNode, setGainNode] = useState<GainNode | null>(null)
-    
+
     const videoRef = useRef<HTMLVideoElement>(null)
-    
+
     let [initialGain, setInitialGain] = useState<number>(1)
     let [initialJump, setInitialJump] = useState<number>(3)
     let [playbackRate, setPlaybackRate] = useState<number>(1)
@@ -24,6 +28,7 @@ export const VideoPlayer = () => {
         if (selectedVideo) {
             const videoURL = URL.createObjectURL(selectedVideo)
             setVideoSrc(videoURL)
+            onFileSelect(selectedVideo.name)
         } else return
     }
 
@@ -187,7 +192,7 @@ export const VideoPlayer = () => {
                             <>
                                 <div className="flex justify-center items-center w-[50vw]">
                                     {/* NEED TO SOLVE 9:16 FORMAT VIDEOS */}
-                                    <div className="w-[44vw] border border-solid border-slate-200 rounded">
+                                    <div className="w-[44vw] bg-black flex justify-center border border-solid border-slate-200 rounded">
                                         <video ref={videoRef} controls disablePictureInPicture >
                                             <source src={videoSrc} type="video/mp4" />
                                             Your browser does not support the video tag.
