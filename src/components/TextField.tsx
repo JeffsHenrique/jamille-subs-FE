@@ -8,6 +8,8 @@ type TextFieldProps = {
 export const TextField = ({ fileName }: TextFieldProps) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const [textAreaValue, setTextAreaValue] = useState<string>('')
+    const [cursorPositionStart, setCursorPositionStart] = useState<number>(0)
+    const [cursorPositionEnd, setCursorPositionEnd] = useState<number>(0)
     const [characterCount, setCharacterCount] = useState<number>(0)
     const [fontSize, setFontSize] = useState<number>(16)
     const [showSaveProgress, setShowSaveProgress] = useState<boolean>(false)
@@ -38,12 +40,21 @@ export const TextField = ({ fileName }: TextFieldProps) => {
         return savedFontSize !== null ? savedFontSize : ''
     }
 
-    const addItalicTag = (textAreaValue: string, selectionStart: number, selectionEnd: number) => {
-        const selectedText = textAreaValue.substring(selectionStart, selectionEnd)
+    const addItalicTag = () => {
+        const textArea = textAreaRef.current
 
-        const newTextWithItalicTag = textAreaValue.substring(0, selectionStart) + '<i>' + selectedText + '</i>' + textAreaValue.substring(selectionEnd)
+        if (textArea?.selectionStart !== undefined) {
+            const startPos = textArea.selectionStart
+            const endPos = textArea.selectionEnd
+            const selectedText = textArea.value.substring(startPos, endPos)
 
-        return newTextWithItalicTag
+            if (selectedText !== '') {
+                const selectedTextWithItalicTag = `${textArea.value.substring(0, startPos)}<i>${selectedText}</i>${textAreaValue.substring(endPos)}`
+                setTextAreaValue(selectedTextWithItalicTag)
+            }
+            setCursorPositionStart(startPos)
+            setCursorPositionEnd(endPos)
+        }
     }
 
     const downloadProduction = () => {
@@ -95,12 +106,7 @@ export const TextField = ({ fileName }: TextFieldProps) => {
                             break
 
                         case 'KeyE':
-                            const currentPosition = textAreaRef.current?.selectionStart || 0
-                            const endPosition = textAreaRef.current?.selectionEnd || 0
-                            if (currentPosition !== undefined && endPosition !== undefined) {
-                                const newtext = addItalicTag(textAreaValue, currentPosition, endPosition)
-                                setTextAreaValue(newtext)
-                            }
+                            addItalicTag()
                             event.preventDefault()
                             break
                     }
@@ -156,6 +162,18 @@ export const TextField = ({ fileName }: TextFieldProps) => {
             setFontSize(parseInt(storagedFontSize))
         }
     }, [])
+
+    useEffect(() => {
+        const textArea = textAreaRef.current
+
+        textArea?.focus()
+        textArea?.setSelectionRange(cursorPositionStart + 3, cursorPositionEnd + 3)
+        
+        return () => {
+            textArea?.focus()
+            textArea?.setSelectionRange(cursorPositionStart + 3, cursorPositionEnd + 3)
+        }
+    }, [cursorPositionStart, cursorPositionEnd])
 
     return(
         <>
