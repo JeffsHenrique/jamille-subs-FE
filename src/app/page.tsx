@@ -16,7 +16,7 @@ const Page = () => {
 
   return (
     <ThemeProvider>
-      <div className="w-full h-[calc(100vh-8vh)] bg-slate-300 dark:bg-gray-950">
+      <div className="w-full min-h-[calc(100vh-8vh)] bg-slate-300 dark:bg-gray-950">
         <Header />
 
         <div className="flex flex-row mt-2 gap-8">
