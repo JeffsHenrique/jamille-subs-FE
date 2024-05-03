@@ -126,14 +126,11 @@ export const VideoPlayer = ({ onFileSelect }: videoPlayerProps) => {
 
         if (!videoElement) return
 
-        let animationFrameId: number
-
         const getVideoTime = () => {
             // Current Time
             const currentTime = videoElement.currentTime
             const formattedCurrentTime = formatTimeWithoutMilliseconds(currentTime)
             setCurrentVideoTime(formattedCurrentTime)
-            animationFrameId = requestAnimationFrame(getVideoTime)
 
             // Total Time
             const totalTime = videoElement.duration
@@ -142,11 +139,9 @@ export const VideoPlayer = ({ onFileSelect }: videoPlayerProps) => {
         }
 
         videoElement.addEventListener('timeupdate', getVideoTime)
-        animationFrameId = requestAnimationFrame(getVideoTime)
-        
+
         return () => {
             videoElement.removeEventListener('timeupdate', getVideoTime)
-            cancelAnimationFrame(animationFrameId)
         }
     }, [videoSrc])
 
@@ -201,8 +196,8 @@ export const VideoPlayer = ({ onFileSelect }: videoPlayerProps) => {
                                 </div>
                                 <div className="flex flex-col md:flex-row justify-between w-[48vw] bg-slate-100 dark:bg-gray-700 rounded border-[2px] border-gray-800 dark:border-sky-200 p-2 m-2">
                                     <div className="min-w-[150px]">
-                                        <p className="text-black dark:text-white">Video time = <span className="font-bold text-green-700 dark:text-green-500">{currentVideoTime}</span></p>
-                                        <p className="text-black dark:text-white">Total time = {totalVideoTime}</p>
+                                        <p className="text-black dark:text-white">Video time = <span className="font-bold text-green-700 dark:text-green-500">{currentVideoTime !== '' ? currentVideoTime : '--:--'}</span></p>
+                                        <p className="text-black dark:text-white">Total time = {totalVideoTime !== '' ? totalVideoTime : '--:--'}</p>
                                     </div>
                                     {/* IMPLEMENT BOOST VOLUME */}
 
