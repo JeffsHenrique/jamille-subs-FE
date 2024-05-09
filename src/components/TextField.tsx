@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react"
-import { SaveProgress } from "./SaveProgress"
+import { ReloadMessage, SaveProgress } from "./CustomMessages"
 import { Shortcuts } from "./Shortcuts"
 
 type TextFieldProps = {
@@ -14,6 +14,7 @@ export const TextField = ({ fileName }: TextFieldProps) => {
     const [characterCount, setCharacterCount] = useState<number>(0)
     const [fontSize, setFontSize] = useState<number>(16)
     const [showSaveProgress, setShowSaveProgress] = useState<boolean>(false)
+    const [showReloadMessage, setShowReloadMessage] = useState<boolean>(false)
     const [showShortcuts, setShowShortcuts] = useState<boolean>(false)
 
     const handleTextAreaInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -65,7 +66,7 @@ export const TextField = ({ fileName }: TextFieldProps) => {
         const newElement = document.createElement("a")
 
         newElement.href = url
-        newElement.download = `${fileName === null ? 'my-transcription.txt' : fileName}`
+        newElement.download = `${fileName === null ? 'my-transcription.txt' : `${fileName.replace(`${fileName.slice(-4)}`, '_decupagem')}`}`
         document.body.appendChild(newElement)
         newElement.click()
         URL.revokeObjectURL(url)
@@ -92,6 +93,19 @@ export const TextField = ({ fileName }: TextFieldProps) => {
         }
     }
 
+    const reloadMessage = () => {
+        setShowReloadMessage(true)
+        setTimeout(() => {
+            setShowReloadMessage(false)
+        }, 5000)
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            saveProductionTempInLocalStorage()
+        }, 200000)
+    }, [textAreaValue])
+
     useEffect(() => {
         const storedContent = loadTextAreaContentFromLocalStorage()
         setTextAreaValue(storedContent)
@@ -107,12 +121,29 @@ export const TextField = ({ fileName }: TextFieldProps) => {
                             event.preventDefault()
                             break
 
-                        case 'KeyE':
+                        case 'KeyI':
                             addItalicTag()
+                            event.preventDefault()
+                            break
+
+                        case 'KeyR':
+                            reloadMessage()
+                            event.stopPropagation()
                             event.preventDefault()
                             break
                     }
                 }
+
+                if (event.ctrlKey && event.shiftKey) {
+                    switch (event.code) {
+                        case 'KeyR':
+                            setShowReloadMessage(false)
+                            location.reload()
+                            event.preventDefault()
+                            break
+                    }
+                }
+
             }
         }
 
@@ -242,6 +273,14 @@ export const TextField = ({ fileName }: TextFieldProps) => {
                 {showSaveProgress &&
                     <div className="absolute right-2 -mt-8"> {/*PRECISO ARRUMAR ISSO DEPOIS*/}
                         <SaveProgress />
+                    </div>
+                }
+
+                {/* Reload Message */}
+
+                {showReloadMessage &&
+                    <div className="absolute right-2 mt-12">
+                        <ReloadMessage />
                     </div>
                 }
             </div>

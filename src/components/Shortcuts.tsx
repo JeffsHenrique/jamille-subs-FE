@@ -50,11 +50,15 @@ export const Shortcuts = () => {
                         <td className="border border-gray-800 dark:border-sky-200">Diminui o volume do vídeo</td>
                     </tr>
                     <tr className="border-gray-800 dark:border-sky-200 text-black dark:text-white">
+                        <td className="border border-gray-800 dark:border-sky-200">CTRL SHIFT R</td>
+                        <td className="border border-gray-800 dark:border-sky-200">Recarrega a página</td>
+                    </tr>
+                    <tr className="border-gray-800 dark:border-sky-200 text-black dark:text-white">
                         <td className="border border-gray-800 dark:border-sky-200">CTRL S</td>
                         <td className="border border-gray-800 dark:border-sky-200">Salva a produção</td>
                     </tr>
                     <tr className="border-gray-800 dark:border-sky-200 text-black dark:text-white">
-                        <td className="border border-gray-800 dark:border-sky-200">CTRL E</td>
+                        <td className="border border-gray-800 dark:border-sky-200">CTRL I</td>
                         <td className="border border-gray-800 dark:border-sky-200">{`Adiciona <i>tag de itálico</i> no texto selecionado`}</td>
                     </tr>
                     <tr className="border-gray-800 dark:border-sky-200 text-black dark:text-white">
