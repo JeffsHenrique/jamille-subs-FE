@@ -102,8 +102,8 @@ export const TextField = ({ fileName }: TextFieldProps) => {
 
     useEffect(() => {
         setTimeout(() => {
-            saveProductionTempInLocalStorage()
-        }, 200000)
+            localStorage.setItem("TextAreaContent", textAreaValue)
+        }, 20000)
     }, [textAreaValue])
 
     useEffect(() => {
